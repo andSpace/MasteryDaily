@@ -25,8 +25,9 @@ function championHelper(){
   return champid;
 }
 
-function createDaily(champid, lobbyid){
+function createDaily(champName, champid, lobbyid){
   return Daily.create({
+    championName: champName,
     championId: champid, //generate random champion
     lobbyId: lobbyid //create new lobby
   }).catch(function(err){
@@ -39,10 +40,11 @@ function createLobby(){
   return Lobby.create({
     name : champData[champid].name, users : {},
     begingStats : {}, endingStats : {},
-    dateStart : startingTime, dateEnd : endingTime
+    dateStart : startingTime, dateEnd : endingTime,
+    champFilter : [ champid ], finished : false
   })
     .then(function (value) {
-      return createDaily(champData[champid].name, value._id);
+      return createDaily(champData[champid].name, champid, value._id);
     })
     .then(function (daily){
       return daily;

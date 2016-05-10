@@ -6,7 +6,8 @@ angular.module('myApp.UserModel', [])
 
   .factory('UserModel', function() {
     var UserModel = {};
-    UserModel.user = "hi";
+    UserModel.user = "";
+    UserModel.summonerid = "";
     UserModel.lobbyIds = [];
 
     UserModel.addLobby = function(id){

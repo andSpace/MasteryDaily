@@ -10,9 +10,13 @@ angular.module('myApp.view2', ['ngRoute'])
 }])
 
 .controller('View2Ctrl',
-  ['$scope', '$http', 'UserModel',
-  function(scope, http, model) {
+  ['$scope', '$http', '$location', 'UserModel',
+    function(scope, http, location, model) {
     scope.dailies = [];
+
+    scope.changeView = function(view){
+      location.path(view);
+    };
 
     if(model.user !== ""){
       http({ method: 'GET', url: '/api/dailies/'})
@@ -29,7 +33,7 @@ angular.module('myApp.view2', ['ngRoute'])
         });
 
       scope.select = function(daily) {
-        http({method: 'POST', url: '/api/lobby/' + daily.lobbyId, params: {user: model.user}})
+        http({method: 'POST', url: '/api/lobby/' + daily.lobbyId, params: {user: model.summonerId}})
           .success(function(data, status, headers, config){
             if(status == 200) {
               console.log("stuff happened.");
@@ -45,5 +49,8 @@ angular.module('myApp.view2', ['ngRoute'])
             console.log("stuff didn't happened.");
           });
       }
+    }
+    else{
+      scope.changeView("/view1");
     }
 }]);

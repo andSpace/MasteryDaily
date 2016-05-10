@@ -11,7 +11,8 @@ angular.module('myApp.lobby.lobby-directive', [])
     return {
       restrict: 'E',
       scope: {
-        lobby: '='
+        lobby: '=',
+        model: '='
       },
       templateUrl: 'views/lobby/lobby.html'
       //link: function(scope, element, attrs){

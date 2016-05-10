@@ -11,8 +11,15 @@ exports.show = function(req, res) {
   console.log(req.params);
   User.findOne({name : req.params.id})
     .then(handleEntityNotFound(req, res))
-    .then(function(entity) {return res.json(entity)})
-    .catch(function(){return function(err){console.log(err);}});
+    .then(function(entity) {
+      if(entity)
+        return res.json(entity)
+      else
+        throw(404); //todo why doesn't return null work here?
+    })
+    .catch(function(err){
+      console.log(err);
+      handleError(res, err)});
   //
   //
   //  , function (err, stats) {
@@ -45,22 +52,35 @@ exports.create = function(req, res) {
 
 function handleEntityNotFound(req, res) {
   return function(entity) {
-    console.log("wait how?", entity);
     if (!entity) {
-      var user = Warden.lookupUser(req.params.id);
-      if(user) {
-        return User.create({
-          name: user, //generate random champion
-          summonerid: user //create new lobby
-        }).catch(function(err){
-          console.log(err);
+
+      return Warden.lookupUser(req.params.id)
+        .then(function(res){
+          console.log(res.statusCode);
+          if(res && res.statusCode == 200) {
+            for (var o in res.body) { //todo probably change because this is super dumb.
+              return res.body[o].id;
+            }
+          }
+          return null;  /*shouldn't happen, but yolo?*/
+        })
+        .then(function(user){
+            return User.create({
+              name: req.params.id, //generate random champion
+              summonerid: user //create new lobby
+            }).then(function(user){ return user; })
+              .catch(function (err) {
+              console.log(err);
+            });
+          })
+        .catch(function(err){
+          return null;
         });
-      } else {
-        res.status(404).end();
-        return null;
-      }
     }
-    return entity;
+    else{
+      return entity;
+    }
+//todo clean this up -- this is promise spaghetti
   };
 }
 

@@ -1,12 +1,6 @@
-<p>This is the partial for view 2.</p>
-<p>
-  Showing of 'interpolate' filter:
-  {{ 'Current version is v%VERSION%.' | interpolate }}
-</p>
-
 <ul >
   <li ng-repeat="daily in dailies">
     <button ng:click="select(daily)">join</button>
-    {{ daily.championId }}
+    {{ daily.championName }}
   </li>
 </ul>

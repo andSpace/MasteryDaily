@@ -6,7 +6,9 @@ var mongoose = require('mongoose'),
 
 var postSchema = new Schema({
   name: String,
-  summonerid: String
+  summonerid: String,
+  mastery: Object,
+  masterUpdate: String
 });
 
 module.exports = mongoose.model('Summoner', postSchema);

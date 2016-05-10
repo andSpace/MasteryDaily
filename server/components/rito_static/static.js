@@ -17,7 +17,7 @@ var apiKey = '&api_key=' + process.env.RIOTAPIKEY;
 
 var url = base + apiPoint + apiKey;
 request(url, function (error, response, body) {
-  if(!error || response.statusCode == 200){
+  if(!error && response.statusCode == 200){
     writeChampion(body);
     writeChampionLite(JSON.parse(body));
   }

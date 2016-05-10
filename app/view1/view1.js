@@ -25,8 +25,10 @@ angular.module('myApp.view1', ['ngRoute'])
           if(status == 200) {
             scope.error = false;
             model.user = scope.username;
-            console.log("model1" + model.user);
-            //scope.changeView("/view2");
+            model.summonerId = data.summonerid;
+
+            console.log("model1", model.user, data.summonerid);
+            scope.changeView("/view2");
           }
         })
         .error(function(data, status, headers, config){

@@ -5,6 +5,7 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 var postSchema = new Schema({
+  championName: String,
   championId: String,
   lobbyId: String
 });
