@@ -4,7 +4,7 @@
       <div class="panel-heading" role="tab" id="{{ lobby._id }}">
         <h4 class="panel-title">
           <a class="collapsed" data-toggle="collapse" data-parent="#accordion" target="_self" href="#collapse{{ lobby._id }}" aria-expanded="false" aria-controls="collapse{{ lobby._id }}">
-            {{ lobby.name }}
+            {{ lobby.name }} {{ lobby.finished | completeify }}
           </a>
         </h4>
       </div>

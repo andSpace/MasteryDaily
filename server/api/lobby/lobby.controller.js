@@ -77,7 +77,6 @@ function findLobby(id){
 
         if(summoner.summonerid in lobby.users ||
           summoner.summonerid in lobby.beginningStats) {
-          lobby.markModified('endingStats');
           lobby.endingStats[summoner.summonerid] = { points: points };
         } else {
           lobby.users[summoner.summonerid] = {joined: Date.now()}; //todo -- but why anymore?
@@ -87,6 +86,7 @@ function findLobby(id){
           lobby.markModified('users');
           lobby.markModified('beginningStats');
         }
+        lobby.markModified('endingStats');
 
         return lobby;
       })

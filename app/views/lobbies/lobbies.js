@@ -3,7 +3,10 @@
  */
 'use strict';
 
-angular.module('myApp.lobbies', ['ngRoute'])
+angular.module('myApp.lobbies', [
+  'ngRoute',
+  'myApp.lobbies.complete-filter'
+])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/lobbies', {
