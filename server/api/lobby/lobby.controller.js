@@ -22,10 +22,10 @@ exports.show = function(req, res) {
 exports.join = function(req, res) {
   console.log({summonerid : req.query.user});
   Summoner.findOne({summonerid : req.query.user})
-    .then(handleEntityNotFound(res))
+    .then(handleEntityNotFound())
     .then(updateMastery())
     .then(findLobby(req.params.id))
-    .then(handleEntityNotFound(res))
+    .then(handleEntityNotFound())
     .then(saveUpdates(req.query))
     .then(responseWithResult(res))
     .catch(handleError(res));
@@ -59,7 +59,6 @@ function findLobby(id){
   return function(summoner) {
     return Lobby.findById(id)
       .then(function(lobby){
-        console.log(lobby);
         //store user stats.
         lobby.users = lobby.users || {};
         lobby.beginningStats = lobby.beginningStats || {};
@@ -99,11 +98,11 @@ function findLobby(id){
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
-    res.sendStatus(statusCode).json(err);
+    return res.status(statusCode).json(err);
   };
 }
 
-function handleEntityNotFound(res) {
+function handleEntityNotFound() {
   return function(entity) {
     if (!entity) {
       throw(404); //todo -- apparently not good? but its <3hr and you know good code comes under pressure.

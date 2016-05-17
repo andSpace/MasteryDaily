@@ -7,9 +7,8 @@ var Warden = require('../../components/rito_jail/warden');
 
 exports.index = function(req, res) {
   Daily.find(function (err, statss) {
-    console.log(statss);
     if(err) { return handleError(res, err); }
-    return res.json(200, statss);
+    return res.status(200).json(statss);
   });
 };
 
