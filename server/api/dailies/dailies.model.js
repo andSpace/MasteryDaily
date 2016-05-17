@@ -7,7 +7,8 @@ var mongoose = require('mongoose'),
 var postSchema = new Schema({
   championName: String,
   championId: String,
-  lobbyId: String
+  lobbyId: String,
+  dateEnd: Number
 });
 
 module.exports = mongoose.model('Daily', postSchema);

@@ -10,7 +10,7 @@ mongoose.Promise = Promise;
 var champData = require('../rito_static/champions-lite');
 var keys = Object.keys(champData);
 var startingTime = Date.now();
-var endingTime = startingTime + (1000*60*60*24);
+var endingTime = startingTime + (1000*60*59*24);
 
 var promiseFor = Promise.method(function(condition, action, value) {
   if (!condition(value)) return value;
@@ -20,7 +20,7 @@ var promiseFor = Promise.method(function(condition, action, value) {
 function championHelper(){
   var max = keys.length;
   var num = Math.floor(Math.random() * max);
-  var champid = keys[num]
+  var champid = keys[num];
   keys.splice(num, 1);
   return champid;
 }
@@ -29,7 +29,8 @@ function createDaily(champName, champid, lobbyid){
   return Daily.create({
     championName: champName,
     championId: champid, //generate random champion
-    lobbyId: lobbyid //create new lobby
+    lobbyId: lobbyid, //create new lobby
+    dateEnd: endingTime
   }).catch(function(err){
     console.log(err);
   });
@@ -55,21 +56,22 @@ function createLobby(){
 }
 
 function populateDailies(){
-  return promiseFor(function(count) {
-    return count < 3;
-  },
-  function(count) {
-    return createLobby()
-      .then(function() {
-        return ++count;
-      });
-  },
-  0);
+  //return promiseFor(function(count) {
+  //  return count < 3;
+  //},
+  //function(count) {
+  //  return createLobby()
+  //    .then(function() {
+  //      return ++count;
+  //    });
+  //},
+  //0);
+  return createLobby();
 }
 
 mongoose.connect('mongodb://localhost/urf3');
 
-Daily.find({}).remove()
+Daily.find({ dateEnd: {$lte: Date.now()}}).remove()
   .then(populateDailies)
   .then(function(){ mongoose.connection.close(); })
   .catch(function(err){console.log(err);});

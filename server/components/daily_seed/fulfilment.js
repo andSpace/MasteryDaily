@@ -18,23 +18,18 @@ function updateLobbies(){
       _.each(val.users, function (v, k) {
         var options = {
           method: 'POST',
-          uri: 'http://localhost:7000/api/lobby/' + val._id + '?user=' + k
+          uri: 'http://localhost:' + process.env.PORT + '/api/lobby/' + val._id + '?user=' + k
         };
         queue.add(function(){makeRequest(options, val)});
       });
-      if(!val.users){
-        markLobby(val);
-      }
+      queue.add(function(){markLobby(val)});
     });
-    queue.add(function() {process.exit(0);})
+    queue.add(function(){process.exit(0);})
   }
 }
 
 function makeRequest(options, lobby){
   request(options)
-    .then(function () {
-      markLobby(lobby);
-    })
     .catch(function (err) {  console.log(err);   });
 }
 
@@ -42,6 +37,7 @@ function markLobby(lobby){
   lobby.finished = true;
   lobby.markModified('finished');
   lobby.save()
+    .then(function(){ console.log(lobby.name, lobby.finished); })
     .catch(function (err) {  console.log(err); });
 }
 
