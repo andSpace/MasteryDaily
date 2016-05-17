@@ -48,6 +48,6 @@ function markLobby(lobby){
 setTimeout(function(){process.exit(1);}, 1000 * 60 * 55);
 mongoose.connect('mongodb://localhost/urf3');
 
-Lobby.find({ $and : [ { dateEnd: {$lte: Date.now()}}, { finished : true }]})
+Lobby.find({ $and : [ { dateEnd: {$lte: Date.now()}}, { finished : false }]})
   .then(updateLobbies())
   .catch(function(err){console.log(err);});
