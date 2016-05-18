@@ -2,5 +2,7 @@
   <li ng-repeat="daily in dailies">
     <button ng:click="select(daily)">join</button>
     {{ daily.championName }}
+    --
+    ends on: {{ daily.dateEnd | dateify }}
   </li>
 </ul>
