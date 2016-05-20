@@ -38,7 +38,7 @@ angular.module('myApp.view1', ['ngRoute'])
             storage.set('model', model);
 
             console.log("model1", model.user, data.summonerid);
-            scope.changeView("/view2");
+            scope.changeView("/lobbies");
           }
         })
         .error(function(data, status, headers, config){
