@@ -10,7 +10,7 @@ mongoose.Promise = Promise;
 var champData = require('../rito_static/champions-lite');
 var keys = Object.keys(champData);
 var startingTime = Date.now();
-var endingTime = startingTime + (1000*60*59*24);
+var endingTime = startingTime + 86340000; //1000 * 60 * 60 * 24 - (60 * 1000)
 
 var promiseFor = Promise.method(function(condition, action, value) {
   if (!condition(value)) return value;

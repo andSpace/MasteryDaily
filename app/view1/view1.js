@@ -24,7 +24,7 @@ angular.module('myApp.view1', ['ngRoute'])
       if(!model.user){ //change to lobbies on first try, otherwise let set new user
         model.user = store.user;
         model.summonerId = store.summonerId;
-        scope.changeView("/view2");
+        scope.changeView("/lobbies");
       }
     }
 

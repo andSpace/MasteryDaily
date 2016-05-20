@@ -30,7 +30,9 @@ function updateLobbies(){
 
 function makeRequest(options, lobby){
   request(options)
-    .catch(function (err) {  console.log(err);   });
+    .catch(function (err) {
+      console.log("error in request", Date.now(), lobby, err.statusCode);
+    });
 }
 
 function markLobby(lobby){

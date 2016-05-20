@@ -5,11 +5,11 @@ angular.module('myApp', [
   'ngRoute',
   'LocalStorageModule',
   'myApp.view1',
-  'myApp.view2',
   'myApp.lobby',
   'myApp.lobbies',
   'myApp.version',
-  'myApp.UserModel'
+  'myApp.UserModel',
+  'myApp.dailies.dailies-directive'
 ]).
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/view1'});
