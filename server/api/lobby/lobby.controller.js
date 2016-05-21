@@ -20,13 +20,12 @@ exports.show = function(req, res) {
 };
 
 exports.join = function(req, res) {
-  console.log({summonerid : req.query.user});
   Summoner.findOne({summonerid : req.query.user})
     .then(handleEntityNotFound())
     .then(updateMastery())
     .then(findLobby(req.params.id))
     .then(handleEntityNotFound())
-    .then(saveUpdates(req.query))
+    .then(saveUpdates())
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
@@ -37,12 +36,6 @@ function updateMastery(){
       return summoner;
 
     return Warden.fetchMastery(summoner.summonerid)
-      .then(function(res){ //console.log(res.statusCode);
-        if (res.statusCode == 200)
-          return res.body;
-        else
-          reject(res.statusCode);
-      })
       .then(function(mastery){
           summoner.mastery = mastery;
           summoner.masteryUpdate = Date.now();
@@ -51,7 +44,9 @@ function updateMastery(){
           summoner.save();
           return summoner;
       })
-      .catch(function(err){ console.log(err);});
+      .catch(function(status){
+        throw new Exception(status, "fetchMastery failed.");
+      });
   }
 }
 
@@ -76,7 +71,7 @@ function findLobby(id){
           console.log(lobby.name + " is past due.",
             "Grace time: ", new Date(gracePeriod),
             "End time: ", new Date(lobby.dateEnd));
-          throw(403);
+          throw new Exception(403, "Lobby past due.");
         }
 
         if(summoner.summonerid in lobby.users ||
@@ -93,10 +88,6 @@ function findLobby(id){
         lobby.markModified('endingStats');
 
         return lobby;
-      })
-      .catch(function(err) {
-        console.log("Could not find the lobby: " + id);
-        return null;
       });
   }
 }
@@ -104,32 +95,29 @@ function findLobby(id){
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
-    return res.status(statusCode).json(err);
+    console.log(err);
+    return res.status(err.status || statusCode).json(err.message || err);
   };
 }
 
 function handleEntityNotFound() {
   return function(entity) {
     if (!entity) {
-      throw(404); //todo -- apparently not good? but its <3hr and you know good code comes under pressure.
+      throw new Exception(404, "Entity not found.");
     }
     return entity;
   };
 }
 
-function saveUpdates(updates) {
+function saveUpdates() {
   return function(entity) {
-  //  entity.users = entity.users || {};
-  //  if(updates.user in entity.users) {
-  //    reject(updates.user);
-  //  }
-  //
-  //  entity.users[updates.user] = {joined: Date.now()};
-  //  entity.markModified('users');
     return entity.save()
       .then(function(updated) {
         return updated;
-      }).catch(function(err){console.log(err);});
+      })
+      .catch(function(err){
+        console.log("Failed to update: ", entity, err);
+      });
   };
 }
 
@@ -140,4 +128,9 @@ function responseWithResult(res, statusCode) {
       res.status(statusCode).json(entity);
     }
   };
+}
+
+function Exception(status, message) {
+  this.message = message;
+  this.status = status;
 }

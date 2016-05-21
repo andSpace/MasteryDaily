@@ -32,8 +32,15 @@ exports.fetchMastery = function(id){
       uri: url,
       json: true,
       resolveWithFullResponse: true
+    })
+    .then(function(res){
+        if (res.statusCode == 200) {
+          return res.body;
+        } else {
+          console.log('fetchMastery failed with code: ' + res.statusCode + ' for ' + id);
+          throw(res.statusCode);
+        }
     });
-
   }
   return null;
 };
