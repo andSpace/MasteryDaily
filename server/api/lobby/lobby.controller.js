@@ -71,8 +71,13 @@ function findLobby(id){
           }
         });
 
-        if(lobby.dateEnd < Date.now() + (60 * 60 * 1000) )
-          return null;
+        var gracePeriod = Date.now() + (60 * 60 * 1000)
+        if(lobby.dateEnd < gracePeriod) {
+          console.log(lobby.name + " is past due.",
+            "Grace time: ", new Date(gracePeriod),
+            "End time: ", new Date(lobby.dateEnd));
+          throw(403);
+        }
 
         if(summoner.summonerid in lobby.users ||
           summoner.summonerid in lobby.beginningStats) {
@@ -90,6 +95,7 @@ function findLobby(id){
         return lobby;
       })
       .catch(function(err) {
+        console.log("Could not find the lobby: " + id);
         return null;
       });
   }

@@ -6,9 +6,6 @@ angular.module('myApp.dailies.dailies-directive', [])
     return {
       restrict: 'E',
       scope: false,
-      templateUrl: 'views/dailies/dailies.html',
-      link: function($scope){
-        console.log($scope);
-      }
+      templateUrl: 'views/dailies/dailies.html'
     };
   });

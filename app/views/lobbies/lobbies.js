@@ -30,14 +30,14 @@ angular.module('myApp.lobbies', [
       http({method: 'GET', url: '/api/lobby/' + model.summonerId})
         .success(function (data, status, headers, config) {
           if (status == 200) {
-            console.log(data);
             scope.lobbies = data;
             data.forEach(function(entry){ model.addLobby(entry._id); });
-            console.log(model);
+            scope.getDailies();
           }
         })
         .error(function (data, status, headers, config) {
-          console.log("stuff didn't happened.");
+          console.log("User does not have any lobbies.");
+          scope.getDailies();
         });
     };
 
@@ -45,18 +45,14 @@ angular.module('myApp.lobbies', [
       http({ method: 'GET', url: '/api/dailies/'})
         .success(function(data, status, headers, config){
           if(status == 200) {
-            console.log("stuff happened.");
             scope.dailies = [];
             data.forEach(function(entry){
               if(!model.hasLobby(entry.lobbyId)) scope.dailies.push(entry);
             });
-            console.log(scope.dailies);
-            console.log(data);
           }
         })
         .error(function(data, status, headers, config){
-          scope.error = true;
-          console.log("stuff didn't happened.");
+          console.log("Failed to get dailies.");
         });
     };
 
@@ -64,22 +60,18 @@ angular.module('myApp.lobbies', [
       http({method: 'POST', url: '/api/lobby/' + daily.lobbyId, params: {user: model.summonerId}})
         .success(function(data, status, headers, config){
           if(status == 200) {
-            console.log("stuff happened.");
-            console.log(data);
             var index = scope.dailies.indexOf(daily);
             if(index > -1) scope.dailies.splice(index, 1);
             scope.getUserLobbies();
           }
         })
         .error(function(data, status, headers, config){
-          scope.error = true;
-          console.log("stuff didn't happened.");
+          console.log("Unable to join the lobby.");
         });
     };
 
     if(model.user !== "") {
       scope.getUserLobbies();
-      scope.getDailies();
     }
     else{
       scope.changeView("/view1");
