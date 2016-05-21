@@ -66,12 +66,11 @@ function findLobby(id){
           }
         });
 
-        var gracePeriod = Date.now() + (60 * 60 * 1000)
+        var gracePeriod = Date.now() - (60 * 60 * 1000)
         if(lobby.dateEnd < gracePeriod) {
-          console.log(lobby.name + " is past due.",
-            "Grace time: ", new Date(gracePeriod),
-            "End time: ", new Date(lobby.dateEnd));
-          throw new Exception(403, "Lobby past due.");
+          console.log("Time now with grace: ", new Date(gracePeriod));
+          console.log("End time: ", new Date(lobby.dateEnd));
+          throw new Exception(403, lobby._id + " : " + lobby.name + " is past due.");
         }
 
         if(summoner.summonerid in lobby.users ||
